@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Avaliações — Vertex Studio</title>
+
+<style>
+:root{
+ --bg:#050816;
+ --card:rgba(11,18,32,.75);
+ --text:#e6edf7;
+ --line:#1f2937;
+ --accent:#FFD700;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ font-family:system-ui;
+ background:radial-gradient(circle at top,#0b1020,#050816);
+ color:var(--text);
+ padding:40px;
+ overflow-x:hidden;
+}
+
+#bgParticles{position:fixed;inset:0;z-index:-1}
+
+.container{max-width:760px;margin:auto}
+
+/* ===== MAG CARD ===== */
+
+.mag-card{
+ background:var(--card);
+ backdrop-filter:blur(18px) saturate(140%);
+ border:1px solid #ffffff22;
+ padding:24px;
+ border-radius:18px;
+ margin-bottom:22px;
+ position:relative;
+ overflow:hidden;
+
+ transform-style:preserve-3d;
+ will-change:transform;
+ transition:
+   transform .25s ease,
+   box-shadow .25s ease,
+   border .25s;
+}
+
+/* vidro + refração */
+.mag-card::after{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:
+   linear-gradient(120deg,
+     transparent 20%,
+     rgba(255,255,255,.18),
+     transparent 60%);
+ opacity:.25;
+ pointer-events:none;
+ mix-blend-mode:overlay;
+}
+
+/* spotlight */
+.mag-card::before{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:radial-gradient(
+ circle at var(--mx,50%) var(--my,50%),
+ rgba(255,215,0,.35),
+ transparent 45%);
+ opacity:0;
+ transition:.2s;
+ pointer-events:none;
+}
+
+.mag-card.hovering{
+ border:1px solid #FFD70066;
+ box-shadow:0 40px 90px #000000aa;
+}
+
+.mag-card.hovering::before{
+ opacity:1;
+}
+
+/* ===== parallax layers ===== */
+
+.layer{
+ transform:translateZ(0);
+ transition:transform .2s;
+}
+
+/* ===== UI ===== */
+
+.badge{
+ padding:8px 14px;
+ border:1px solid #ffffff22;
+ border-radius:999px;
+ cursor:pointer;
+ margin-bottom:20px;
+ background:transparent;
+ color:#fff;
+}
+
+.verify{
+ background:#16a34a;
+ color:#fff;
+ font-size:12px;
+ padding:4px 8px;
+ border-radius:999px;
+ margin-left:8px;
+}
+
+input, textarea{
+ width:100%;
+ padding:12px;
+ border-radius:12px;
+ border:1px solid #ffffff22;
+ background:#00000022;
+ color:#fff;
+ margin:10px 0;
+}
+
+.btn{
+ padding:14px 20px;
+ border-radius:12px;
+ border:none;
+ cursor:pointer;
+ font-weight:700;
+ background:var(--accent);
+}
+
+.review-stars{
+ display:flex;
+ gap:8px;
+ font-size:30px;
+ cursor:pointer;
+}
+
+.review-stars span{
+ opacity:.35;
+ transition:.2s;
+}
+
+.review-stars span.active{
+ opacity:1;
+ color:var(--accent);
+}
+
+.stats{
+ display:flex;
+ gap:30px;
+ margin-bottom:20px;
+ font-weight:700;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bgParticles"></canvas>
+
+<div class="container">
+
+<div class="stats">
+ <div>Média: <span id="avgStars"></span></div>
+ <div>Total: <span id="count">0</span></div>
+</div>
+
+<!-- FORM -->
+<div class="mag-card">
+<h2 class="layer">Avaliar a Vertex Studio</h2>
+
+<input id="name" placeholder="Seu nome">
+
+<div class="review-stars layer" id="stars">
+<span data-v="1">★</span>
+<span data-v="2">★</span>
+<span data-v="3">★</span>
+<span data-v="4">★</span>
+<span data-v="5">★</span>
+</div>
+
+<textarea id="reviewText" placeholder="Sua avaliação"></textarea>
+<button class="btn" onclick="sendReview()">Enviar</button>
+</div>
+
+<div id="reviewList"></div>
+
+</div>
+
+<script>
+/* ===== estrelas ===== */
+let selectedStars=0;
+stars.querySelectorAll("span").forEach(s=>{
+ s.onclick=()=>{
+  selectedStars=s.dataset.v;
+  stars.querySelectorAll("span").forEach(x=>{
+   x.classList.toggle("active",x.dataset.v<=selectedStars);
+  });
+ };
+});
+
+/* ===== reviews ===== */
+
+function sendReview(){
+ if(!selectedStars || !reviewText.value.trim()) return;
+
+ const R=JSON.parse(localStorage.reviews||"[]");
+ R.push({
+  name:name.value||"Cliente",
+  stars:+selectedStars,
+  text:reviewText.value,
+  date:Date.now()
+ });
+
+ localStorage.reviews=JSON.stringify(R);
+ name.value="";
+ reviewText.value="";
+ selectedStars=0;
+ stars.querySelectorAll("span").forEach(x=>x.classList.remove("active"));
+ render();
+}
+
+function avgStarsHTML(avg){
+ const pct=(avg/5)*100;
+ return `<div style="position:relative;font-size:26px">
+ <div style="color:#555">★★★★★</div>
+ <div style="color:#FFD700;position:absolute;top:0;left:0;width:${pct}%;overflow:hidden">★★★★★</div>
+ </div>`;
+}
+
+function render(){
+ const all=JSON.parse(localStorage.reviews||"[]")
+ .sort((a,b)=>b.stars-a.stars||b.date-a.date);
+
+ const avg=all.length?all.reduce((a,b)=>a+b.stars,0)/all.length:0;
+ avgStars.innerHTML=avgStarsHTML(avg);
+ count.innerText=all.length;
+
+ reviewList.innerHTML=all.map(r=>`
+ <div class="mag-card">
+   <div class="layer"><b>${r.name}</b></div>
+   <div class="layer" style="color:#FFD700">${"★".repeat(r.stars)}</div>
+   <p class="layer">${r.text}</p>
+ </div>`).join("");
+
+ enableMagneticProMax();
+}
+render();
+
+/* ===== MAGNETIC PRO MAX ENGINE ===== */
+
+function enableMagneticProMax(){
+
+ document.querySelectorAll(".mag-card").forEach(card=>{
+
+  const layers=card.querySelectorAll(".layer");
+
+  card.addEventListener("pointermove", e=>{
+   const r=card.getBoundingClientRect();
+   const x=e.clientX-r.left;
+   const y=e.clientY-r.top;
+
+   card.style.setProperty("--mx",x+"px");
+   card.style.setProperty("--my",y+"px");
+
+   const cx=r.width/2;
+   const cy=r.height/2;
+   const dx=(x-cx)/cx;
+   const dy=(y-cy)/cy;
+
+   const rx = -dy*10;
+   const ry = dx*14;
+
+   card.classList.add("hovering");
+
+   card.style.transform=
+    `translateY(-14px) scale(1.06)
+     rotateX(${rx}deg) rotateY(${ry}deg)`;
+
+   /* sombra dinâmica */
+   card.style.boxShadow=
+    `${-ry*2}px ${rx*2+40}px 90px rgba(0,0,0,.55)`;
+
+   /* parallax interno */
+   layers.forEach((el,i)=>{
+    const depth=(i+1)*6;
+    el.style.transform=
+     `translateX(${dx*depth}px)
+      translateY(${dy*depth}px)
+      translateZ(${depth}px)`;
+   });
+
+  });
+
+  card.addEventListener("pointerleave",()=>{
+   card.classList.remove("hovering");
+   card.style.transform="";
+   card.style.boxShadow="";
+   layers.forEach(el=>el.style.transform="");
+  });
+
+ });
+}
+
+/* ===== partículas ===== */
+
+const c=bgParticles,ctx=c.getContext("2d");
+function resize(){c.width=innerWidth;c.height=innerHeight}
+resize();onresize=resize;
+
+const P=[...Array(90)].map(()=>({
+ x:Math.random()*c.width,
+ y:Math.random()*c.height,
+ vx:(Math.random()-.5)*.4,
+ vy:(Math.random()-.5)*.4,
+ r:Math.random()*2
+}));
+
+function loop(){
+ ctx.clearRect(0,0,c.width,c.height);
+ P.forEach(p=>{
+  p.x+=p.vx;p.y+=p.vy;
+  if(p.x<0||p.x>c.width)p.vx*=-1;
+  if(p.y<0||p.y>c.height)p.vy*=-1;
+  ctx.beginPath();
+  ctx.arc(p.x,p.y,p.r,0,6.28);
+  ctx.fillStyle="rgba(255,255,255,.15)";
+  ctx.fill();
+ });
+ requestAnimationFrame(loop);
+}
+loop();
+</script>
+
+</body>
+</html>
