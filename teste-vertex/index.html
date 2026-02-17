@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Vertex Studio — Produtos Digitais & SaaS</title>
+  <meta name="description" content="Apps, SaaS, plataformas e sistemas sob medida. Engenharia de software focada em produto.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== DESIGN SYSTEM ===== */
+    :root{
+      --bg:#050816;
+      --bg2:#020617;
+      --card:#0b1220;
+      --line:#111827;
+      --text:#e6edf7;
+      --muted:#94a3b8;
+      --brand:#38bdf8;
+      --accent:#22c55e;
+      --violet:#a78bfa;
+      --radius:18px;
+      --shadow:0 30px 80px rgba(0,0,0,.55);
+    }
+
+    .light{
+      --bg:#f6f8fc;
+      --bg2:#ffffff;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --line:#e5e7eb;
+      --shadow:0 20px 50px rgba(0,0,0,.08);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family:Inter,system-ui;
+      background: radial-gradient(circle at 10% -10%, #0b1733 0%, transparent 40%), var(--bg);
+      color:var(--text);
+    }
+
+    .container{max-width:1200px;margin:auto;padding:0 20px}
+
+    /* ===== NAV ===== */
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:999;
+      background:rgba(5,8,22,.7);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line);
+    }
+
+    .nav-inner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px;
+    }
+
+    .logo{
+      font-weight:900;
+      font-size:22px;
+      background:linear-gradient(90deg,var(--brand),var(--violet),var(--accent));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .menu a{
+      margin-left:22px;
+      text-decoration:none;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .menu a:hover{color:var(--text)}
+
+    .badge{
+      margin-left:20px;
+      padding:6px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      cursor:pointer;
+    }
+
+    /* ===== HERO ===== */
+    .hero{
+      padding:160px 0 120px;
+      text-align:center;
+    }
+
+    .hero h1{
+      font-size:64px;
+      font-weight:900;
+      line-height:1.05;
+    }
+
+    .grad{
+      background:linear-gradient(90deg,var(--brand),var(--violet),var(--accent));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .sub{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:18px;
+    }
+
+    .btn{
+      display:inline-block;
+      padding:16px 28px;
+      border-radius:14px;
+      font-weight:800;
+      text-decoration:none;
+      cursor:pointer;
+      border:none;
+      color:white;
+      background:linear-gradient(90deg,#22c55e,#16a34a);
+      transition:.25s;
+      margin-top:28px;
+    }
+
+    .btn:hover{transform:translateY(-3px)}
+
+    .btn-outline{
+      background:none;
+      border:1px solid var(--line);
+      color:var(--text);
+    }
+
+    /* ===== SECTIONS ===== */
+    .section{padding:110px 0}
+
+    .section h2{
+      text-align:center;
+      font-size:42px;
+      margin-bottom:50px;
+    }
+
+    /* ===== GRID ===== */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:28px;
+    }
+
+    .card{
+      background:linear-gradient(180deg,var(--card),var(--bg2));
+      border:1px solid var(--line);
+      padding:30px;
+      border-radius:var(--radius);
+      transition:.35s;
+      box-shadow:var(--shadow);
+    }
+
+    .card:hover{
+      transform:translateY(-10px);
+      border-color:var(--brand);
+    }
+
+    /* ===== METRICS ===== */
+    .metrics{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:20px;
+      text-align:center;
+    }
+
+    .metric b{
+      font-size:36px;
+      color:var(--brand);
+    }
+
+    /* ===== TIMELINE ===== */
+    .steps{display:grid;gap:20px}
+
+    .step{
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+    }
+
+    .bullet{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      background:var(--brand);
+      color:#001018;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+    }
+
+    /* ===== PLANS ===== */
+    .plan.reco{
+      outline:2px solid var(--brand);
+      transform:scale(1.04);
+      position:relative;
+    }
+
+    .tag{
+      position:absolute;
+      top:-12px;
+      right:20px;
+      background:var(--brand);
+      color:#001018;
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:800;
+    }
+
+    .price{
+      font-size:38px;
+      font-weight:900;
+      margin:10px 0;
+    }
+
+    .select{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:var(--bg2);
+      color:var(--text);
+      margin:12px 0;
+    }
+
+    /* ===== CHAT ===== */
+    .chat{
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      background:var(--card);
+    }
+
+    .chat-top{
+      padding:14px;
+      border-bottom:1px solid var(--line);
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .chat-msgs{
+      padding:16px;
+      min-height:220px;
+    }
+
+    .msg{
+      padding:10px 14px;
+      border-radius:14px;
+      margin-bottom:10px;
+      font-size:14px;
+      max-width:80%;
+    }
+
+    .user{
+      background:var(--brand);
+      color:white;
+      margin-left:auto;
+    }
+
+    .bot{background:#1e293b}
+
+    .opts{
+      padding:14px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      border-top:1px solid var(--line);
+    }
+
+    .opt{
+      padding:8px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      cursor:pointer;
+      font-size:12px;
+    }
+
+    /* ===== ADMIN ===== */
+    .input{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:var(--bg2);
+      color:var(--text);
+      margin:10px 0;
+    }
+
+    .admin{
+      display:none;
+      margin-top:20px;
+      border:1px dashed var(--line);
+      padding:20px;
+      border-radius:16px;
+    }
+
+    /* ===== FLOAT CTA ===== */
+    .whats{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:#22c55e;
+      color:white;
+      padding:18px;
+      border-radius:50%;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 10px 30px rgba(0,0,0,.4);
+    }
+
+    /* ===== ANIM ===== */
+    .reveal{
+      opacity:0;
+      transform:translateY(40px);
+      transition:.8s;
+    }
+
+    .reveal.show{
+      opacity:1;
+      transform:none;
+    }
+
+    footer{
+      text-align:center;
+      padding:70px 0;
+      border-top:1px solid var(--line);
+      color:var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner container">
+      <div class="logo">Vertex Studio</div>
+      <div class="menu">
+        <a href="#serv">Serviços</a>
+        <a href="#metodo">Método</a>
+        <a href="#stack">Stack</a>
+        <a href="#plans">Planos</a>
+        <a href="#faq">Assistente</a>
+        <a href="#admin">Admin</a>
+        <span class="badge" onclick="toggleMode()">🌗</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero container reveal">
+    <h1>Engenharia de <span class="grad">Produtos Digitais</span></h1>
+    <p class="sub">Apps • SaaS • Plataformas • Sistemas sob medida</p>
+    <button class="btn" onclick="cta()">Solicitar orçamento</button>
+  </section>
+
+  <!-- MÉTRICAS -->
+  <section class="section container reveal">
+    <div class="metrics">
+      <div class="metric"><b>120+</b><br>Projetos</div>
+      <div class="metric"><b>99%</b><br>Satisfação</div>
+      <div class="metric"><b>SaaS</b><br>Especialidade</div>
+      <div class="metric"><b>24/7</b><br>Suporte</div>
+    </div>
+  </section>
+
+  <!-- SERVIÇOS -->
+  <section class="section container" id="serv">
+    <h2>Serviços</h2>
+    <div class="grid">
+      <div class="card reveal">Apps Mobile sob demanda</div>
+      <div class="card reveal">Plataformas SaaS</div>
+      <div class="card reveal">Sistemas Web empresariais</div>
+      <div class="card reveal">Dashboards & Analytics</div>
+      <div class="card reveal">Integrações API</div>
+      <div class="card reveal">Arquitetura de produto</div>
+    </div>
+  </section>
+
+  <!-- MÉTODO -->
+  <section class="section container" id="metodo">
+    <h2>Como trabalhamos</h2>
+    <div class="steps reveal">
+      <div class="step"><div class="bullet">1</div>Análise e escopo técnico</div>
+      <div class="step"><div class="bullet">2</div>Arquitetura do sistema</div>
+      <div class="step"><div class="bullet">3</div>Design de produto</div>
+      <div class="step"><div class="bullet">4</div>Desenvolvimento</div>
+      <div class="step"><div class="bullet">5</div>Testes e validação</div>
+      <div class="step"><div class="bullet">6</div>Deploy e suporte</div>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section class="section container" id="stack">
+    <h2>Stack tecnológica</h2>
+    <div class="grid">
+      <div class="card reveal">React • Next</div>
+      <div class="card reveal">Flutter</div>
+      <div class="card reveal">Node • APIs</div>
+      <div class="card reveal">Supabase</div>
+      <div class="card reveal">Cloud</div>
+      <div class="card reveal">Arquitetura SaaS</div>
+    </div>
+  </section>
+
+  <!-- PLANOS -->
+  <section class="section container" id="plans">
+    <h2>Planos</h2>
+    <div class="grid">
+
+      <div class="card plan reveal">
+        <h3>Iniciante</h3>
+        <select class="select" onchange="price(this,27.9)">
+          <option value="1">1 mês</option>
+          <option value="6">6 meses</option>
+          <option value="12">12 meses</option>
+        </select>
+        <div class="price">R$ 27,90</div>
+        3 pedidos • 1 modificação • suporte rápido
+        <button class="btn" onclick="buy('Iniciante')">Contratar</button>
+      </div>
+
+      <div class="card plan reco reveal">
+        <div class="tag">MAIS ESCOLHIDO</div>
+        <h3>Básico</h3>
+        <select class="select" onchange="price(this,49.9)">
+          <option value="1">1 mês</option>
+          <option value="6">6 meses</option>
+          <option value="12">12 meses</option>
+        </select>
+        <div class="price">R$ 49,90</div>
+        6 pedidos • 3 mods • prioridade
+        <button class="btn" onclick="buy('Básico')">Contratar</button>
+      </div>
+
+      <div class="card plan reveal">
+        <h3>Plus</h3>
+        <select class="select" onchange="price(this,99.9)">
+          <option value="1">1 mês</option>
+          <option value="6">6 meses</option>
+          <option value="12">12 meses</option>
+        </select>
+        <div class="price">R$ 99,90</div>
+        10 pedidos • exclusivo • arquitetura dedicada
+        <button class="btn" onclick="buy('Plus')">Contratar</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ASSISTENTE -->
+  <section class="section container" id="faq">
+    <h2>Assistente Vertex</h2>
+    <div class="chat reveal">
+      <div class="chat-top">FAQ inteligente</div>
+      <div class="chat-msgs" id="msgs"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section class="section container" id="admin">
+    <h2>Admin</h2>
+    <input id="pass" class="input" placeholder="Senha">
+    <button class="btn" onclick="login()">Entrar</button>
+    <div class="admin" id="panel">
+      <div id="stats"></div>
+      <div id="leads"></div>
+    </div>
+  </section>
+
+  <footer>© Vertex Studio — Produto Digital</footer>
+
+  <div class="whats" onclick="cta()">WA</div>
+
+  <script>
+    /* mode */
+    if(localStorage.mode==="light") document.body.classList.add("light");
+
+    function toggleMode(){
+      document.body.classList.toggle("light");
+      localStorage.mode=document.body.classList.contains("light")?"light":"dark";
+    }
+
+    /* reveal */
+    const obs=new IntersectionObserver(e=>{
+      e.forEach(x=>x.isIntersecting && x.target.classList.add("show"))
+    });
+    document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+
+    /* plans */
+    function price(sel,base){
+      let m=sel.value;
+      let t=base*m;
+      if(m==6)t*=.9;
+      if(m==12)t*=.8;
+      sel.parentNode.querySelector(".price").innerText=
+        "R$ "+t.toFixed(2).replace(".",",");
+    }
+
+    function buy(p){
+      saveLead("Plano "+p);
+      location.href="https://wa.me/5521972377951?text=Quero plano "+p;
+    }
+
+    /* crm */
+    function saveLead(t){
+      let L=JSON.parse(localStorage.leads||"[]");
+      L.push({t,at:new Date().toLocaleString()});
+      localStorage.leads=JSON.stringify(L);
+    }
+
+    /* ===== FAQ ===== */
+    const qa=[
+      ["Como funciona orçamento?","Você entra em contato pelo WhatsApp, analisamos os detalhes do seu projeto e enviamos um orçamento personalizado."],
+      ["Qual o prazo médio para a conclusão?","Em média, os projetos são concluídos entre 1 e 3 semanas, dependendo da complexidade."],
+      ["Tem contrato?","Sim, trabalhamos com contrato formal para garantir segurança para ambas as partes."],
+      ["Tem suporte?","Sim. O projeto inclui suporte para ajustes e orientações após e durante a entrega."],
+      ["Vocês fazem app?","Sim. Desenvolvemos aplicativos e sistemas completos, personalizados conforme a necessidade do projeto."],
+      ["Aceita parcelamento?","Sim, trabalhamos com pagamento dividido por fases de entrega."],
+      ["Tem garantia?","Sim. O projeto conta com garantia para correções relacionadas à entrega."],
+      ["Faz SaaS?","Sim. Desenvolvimento de SaaS é uma das nossas especialidades."],
+      ["Integra APIs?","Sim. Realizamos integrações com APIs externas e sistemas de terceiros."],
+      ["Hospedagem inclusa?","Pode ser incluída conforme o projeto."]
+    ];
+
+    function msg(t,c){
+      let d=document.createElement("div");
+      d.className="msg "+c;
+      d.innerText=t;
+      msgs.appendChild(d);
+    }
+
+    qa.forEach(x=>{
+      let b=document.createElement("div");
+      b.className="opt";
+      b.innerText=x[0];
+      b.onclick=()=>{
+        msg(x[0],"user");
+        saveLead(x[0]);
+        setTimeout(()=>msg(x[1],"bot"),300);
+      };
+      opts.appendChild(b);
+    });
+
+    msg("Escolha uma pergunta 👇","bot");
+
+    /* admin */
+    const ADMIN_PASS="Wellington & Kaique";
+
+    function login(){
+      if(pass.value!==ADMIN_PASS) return alert("Senha errada");
+      panel.style.display="block";
+      let L=JSON.parse(localStorage.leads||"[]");
+      stats.innerText="Leads: "+L.length;
+      leads.innerHTML=L.map(x=>x.at+" — "+x.t).join("<br>");
+    }
+
+    /* cta */
+    function cta(){
+      saveLead("CTA");
+      location.href="https://wa.me/5521972377951";
+    }
+  </script>
+
+</body>
+</html>
